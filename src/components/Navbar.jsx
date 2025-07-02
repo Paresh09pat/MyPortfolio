@@ -167,7 +167,7 @@ const Navbar = () => {
               transition={{ duration: 0.5, delay: navItems.length * 0.1 }}
             >
               <motion.a
-                href="/resume.pdf"
+                href="/PARESHPATIL.pdf"
                 className="px-6 py-2 rounded-lg bg-secondary/10 border border-secondary text-secondary transition-all duration-300 hover:bg-secondary/20 hover:shadow-md hover:shadow-secondary/20"
                 target="_blank"
                 rel="noopener noreferrer"
