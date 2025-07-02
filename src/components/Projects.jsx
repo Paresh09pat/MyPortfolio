@@ -13,7 +13,7 @@ const Projects = () => {
       description: 'A full-stack portfolio website built with the MERN stack (MongoDB, Express.js, React, Node.js). It showcases personal projects, skills, experience, and includes a dynamic contact form powered by EmailJS. The site features a responsive design.',
       tech: ['React','Framer Motion','Tailwind CSS','EmailJS','Javascript'],
       github: '#',
-      live: '#',
+      live: 'https://paresh-port-folio.netlify.app/',
       image: '/portfolio.png'
     },
     {
