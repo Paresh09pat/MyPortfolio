@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Fira+Code:wght@300;400;500;600;700&display=swap');
+
+/* Custom utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+@layer base {
+  body {
+    @apply bg-primary text-textPrimary;
+  }
+}
+
+@layer components {
+  .nav-link {
+    @apply px-4 py-2 text-sm font-mono text-textSecondary hover:text-secondary transition-colors duration-300;
+  }
+  
+  .section-heading {
+    @apply text-3xl font-bold text-textSecondary mb-8 flex items-center;
+  }
+  
+  .section-heading::after {
+    content: "";
+    @apply ml-4 h-px bg-textPrimary flex-grow;
+  }
+  
+  .btn-primary {
+    @apply px-6 py-3 border border-secondary text-secondary rounded hover:bg-secondary/10 transition-colors duration-300 font-mono;
+  }
+}
+
+.fade-up {
+  animation: fadeUp 0.5s ease-out forwards;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
