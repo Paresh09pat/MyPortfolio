@@ -5,30 +5,22 @@ const ScrollToTop = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    // Scroll to top on route change
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: 'instant' // Changed from 'smooth' for better page transition
-    });
-
-    // Force a reflow/repaint to ensure new page content is visible
-    document.body.style.opacity = '0.99';
-    setTimeout(() => {
-      document.body.style.opacity = '1';
-    }, 10);
-
-    // Add a small delay to ensure animations have time to complete
-    const timeout = setTimeout(() => {
-      // Remove any stale animations or transitions
-      const animatingElements = document.querySelectorAll('.motion-reduce:not([data-motion="false"])');
-      animatingElements.forEach(el => {
-        el.style.animation = 'none';
-        el.style.transition = 'none';
+    // Smooth scroll to top on route change with better performance
+    const scrollToTop = () => {
+      // Use requestAnimationFrame for smoother scrolling
+      requestAnimationFrame(() => {
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: 'instant' // Instant for better page transitions
+        });
       });
-    }, 300);
+    };
 
-    return () => clearTimeout(timeout);
+    // Small delay to ensure route change is complete
+    const timeoutId = setTimeout(scrollToTop, 50);
+
+    return () => clearTimeout(timeoutId);
   }, [pathname]);
 
   return null;

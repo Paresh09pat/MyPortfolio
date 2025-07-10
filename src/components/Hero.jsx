@@ -5,25 +5,38 @@ import { Link } from 'react-router-dom';
 
 const Hero = () => {
   const [charIndex, setCharIndex] = useState(-1);
+  const [isMobile, setIsMobile] = useState(false);
   const nameText = "Paresh";
   
-  // For text typing effect
+  // Check if device is mobile for performance optimizations
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+  
+  // For text typing effect - faster on mobile
   useEffect(() => {
     if (charIndex < nameText.length - 1) {
       const timer = setTimeout(() => {
         setCharIndex(prev => prev + 1);
-      }, 200);
+      }, isMobile ? 150 : 200); // Faster typing on mobile
       return () => clearTimeout(timer);
     }
-  }, [charIndex]);
+  }, [charIndex, isMobile]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        delayChildren: 0.3,
-        staggerChildren: 0.2
+        delayChildren: 0.2, // Reduced delay
+        staggerChildren: isMobile ? 0.1 : 0.2 // Faster on mobile
       }
     }
   };
@@ -32,21 +45,25 @@ const Hero = () => {
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
-      opacity: 1
+      opacity: 1,
+      transition: {
+        duration: isMobile ? 0.4 : 0.6 // Faster on mobile
+      }
     }
   };
 
-  // Letter animation for the heading
+  // Simplified letter animation for mobile
   const letterVariants = {
     hidden: { 
       opacity: 0,
-      y: 20,
+      y: isMobile ? 10 : 20, // Reduced movement on mobile
     },
     visible: (i) => ({ 
       opacity: 1,
       y: 0,
       transition: {
-        delay: i * 0.1
+        delay: i * (isMobile ? 0.05 : 0.1), // Faster on mobile
+        duration: isMobile ? 0.3 : 0.5
       }
     })
   };
@@ -60,7 +77,7 @@ const Hero = () => {
         variants={letterVariants}
         initial="hidden"
         animate="visible"
-        className={char === " " ? "inline-block mr-2" : "inline-block"}
+        className={char === " " ? "inline-block mr-1 sm:mr-2" : "inline-block"}
       >
         {char}
       </motion.span>
@@ -68,33 +85,37 @@ const Hero = () => {
   };
 
   return (
-    <section className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-b from-primary via-primary to-tertiary relative overflow-hidden">
-      {/* Background Animation */}
+    <section className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-4 bg-gradient-to-b from-primary via-primary to-tertiary relative overflow-hidden">
+      {/* Simplified background animation for mobile */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute w-96 h-96 bg-secondary/5 rounded-full blur-3xl -top-48 -left-48 animate-float"></div>
-        <div className="absolute w-96 h-96 bg-accent/5 rounded-full blur-3xl -bottom-48 -right-48 animate-float" style={{ animationDelay: '2s' }}></div>
+        {!isMobile && (
+          <>
+            <div className="absolute w-72 sm:w-96 h-72 sm:h-96 bg-secondary/3 sm:bg-secondary/5 rounded-full blur-3xl -top-36 sm:-top-48 -left-36 sm:-left-48 animate-float"></div>
+            <div className="absolute w-72 sm:w-96 h-72 sm:h-96 bg-accent/3 sm:bg-accent/5 rounded-full blur-3xl -bottom-36 sm:-bottom-48 -right-36 sm:-right-48 animate-float" style={{ animationDelay: '2s' }}></div>
+          </>
+        )}
         
-        {/* Added animated gradient mesh */}
+        {/* Simplified animated gradient mesh */}
         <motion.div 
-          className="absolute inset-0 opacity-10"
+          className="absolute inset-0 opacity-5 sm:opacity-10"
           animate={{ 
             backgroundPosition: ['0% 0%', '100% 100%'] 
           }}
           transition={{ 
-            duration: 20,
+            duration: isMobile ? 30 : 20, // Slower on mobile for better performance
             repeat: Infinity,
             repeatType: "mirror"
           }}
           style={{
             backgroundImage: 'radial-gradient(circle at 30% 30%, #38BDF8 0%, transparent 30%), radial-gradient(circle at 70% 70%, #F472B6 0%, transparent 30%)',
             backgroundSize: '100% 100%',
-            filter: 'blur(100px)'
+            filter: isMobile ? 'blur(60px)' : 'blur(100px)' // Reduced blur on mobile
           }}
         />
       </div>
 
       <motion.div
-        className="container mx-auto relative z-10"
+        className="container mx-auto relative z-10 text-center sm:text-left"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -103,7 +124,7 @@ const Hero = () => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
-          className="text-secondary font-mono mb-5 text-lg flex items-center"
+          className="text-secondary font-mono mb-4 sm:mb-5 text-base sm:text-lg flex items-center justify-center sm:justify-start"
         >
           <motion.div
             animate={{ 
@@ -128,10 +149,10 @@ const Hero = () => {
           </motion.span>
         </motion.div>
 
-        {/* Animated name with typing effect */}
-        <div className="flex items-end mb-4">
+        {/* Responsive animated name with typing effect */}
+        <div className="flex items-end mb-4 sm:mb-6 justify-center sm:justify-start">
           <motion.h1
-            className="text-5xl md:text-7xl font-bold text-textPrimary relative group"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-textPrimary relative group"
           >
             {nameText.split('').map((char, index) => (
               <motion.span
@@ -162,9 +183,9 @@ const Hero = () => {
             </motion.span>
           </motion.h1>
           
-          {/* Blinking cursor that disappears after typing is complete */}
+          {/* Responsive blinking cursor */}
           <motion.div
-            className="w-1 h-12 md:h-16 bg-secondary mb-1 ml-1"
+            className="w-0.5 sm:w-1 h-8 sm:h-12 md:h-14 lg:h-16 bg-secondary mb-1 ml-1"
             animate={{ 
               opacity: charIndex < nameText.length - 1 ? [1, 0] : 0 
             }}
@@ -183,49 +204,34 @@ const Hero = () => {
           />
         </div>
 
+        {/* Responsive subtitle */}
         <motion.h2
-          className="text-4xl md:text-6xl font-bold text-textSecondary mb-6"
+          className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-textSecondary mb-4 sm:mb-6"
         >
-          {splitText("I craft digital experiences.")}
+          <span className="inline-block">
+            {splitText("I craft digital experiences.")}
+          </span>
         </motion.h2>
 
+        {/* Responsive description */}
         <motion.p
           variants={itemVariants}
-          className="max-w-xl text-lg text-textSecondary mb-12 leading-relaxed"
+          className="max-w-xl text-base sm:text-lg text-textSecondary mb-8 sm:mb-12 leading-relaxed mx-auto sm:mx-0"
         >
           <motion.span
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 2, duration: 1 }}
           >
-            A passionate{" "}
-            <motion.span
-              className="text-secondary font-semibold"
-              animate={{ 
-                color: ["#38BDF8", "#F472B6", "#38BDF8"],
-                textShadow: [
-                  "0 0 5px rgba(56, 189, 248, 0)",
-                  "0 0 10px rgba(56, 189, 248, 0.5)",
-                  "0 0 5px rgba(56, 189, 248, 0)"
-                ]
-              }}
-              transition={{ 
-                duration: 3,
-                repeat: Infinity,
-                repeatType: "reverse"
-              }}
-            >
-              MERN Stack Developer
-            </motion.span>{" "}
-            with 3 years of experience in building
-            exceptional digital experiences. I specialize in creating innovative web solutions
-            that combine beautiful design with powerful functionality.
+            I'm a passionate full-stack developer specializing in the MERN stack. 
+            I create seamless user experiences and robust applications that make a difference.
           </motion.span>
         </motion.p>
 
+        {/* Responsive action buttons */}
         <motion.div
           variants={itemVariants}
-          className="flex gap-6 mb-16"
+          className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-center sm:items-start justify-center sm:justify-start"
         >
           <motion.div
             whileHover={{ scale: 1.05 }}
@@ -233,101 +239,71 @@ const Hero = () => {
           >
             <Link
               to="/projects"
-              className="px-8 py-3 bg-secondary text-primary rounded-lg font-semibold hover:bg-secondary/90 transition-all duration-300 shadow-lg shadow-secondary/20 hover:shadow-secondary/30 block"
+              className="btn-primary w-full sm:w-auto text-center px-6 py-3 text-sm sm:text-base"
             >
               View My Work
             </Link>
           </motion.div>
+          
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             <Link
               to="/contact"
-              className="px-8 py-3 border-2 border-secondary text-secondary rounded-lg font-semibold hover:bg-secondary/10 transition-all duration-300 block"
+              className="px-6 py-3 border border-textSecondary text-textSecondary rounded hover:bg-textSecondary/10 transition-colors duration-300 font-mono w-full sm:w-auto text-center text-sm sm:text-base"
             >
-              Get in Touch
+              Get In Touch
             </Link>
           </motion.div>
         </motion.div>
 
+        {/* Social links with responsive sizing */}
         <motion.div
           variants={itemVariants}
-          className="fixed left-10 bottom-0 hidden lg:block"
+          className="flex justify-center sm:justify-start space-x-6 mt-8 sm:mt-12"
         >
-          <div className="flex flex-col items-center gap-6">
+          {[
+            { icon: FiGithub, href: "https://github.com/Paresh09pat", label: "GitHub" },
+            { icon: FiLinkedin, href: "https://www.linkedin.com/in/paresh-patil-154070217/", label: "LinkedIn" },
+            { icon: FiTwitter, href: "#", label: "Twitter" }
+          ].map(({ icon: Icon, href, label }) => (
             <motion.a
-              href="https://github.com/Paresh09pat"
+              key={label}
+              href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-textSecondary hover:text-secondary hover:-translate-y-1 transition-all duration-300"
-              whileHover={{ scale: 1.2 }}
+              className="text-textSecondary hover:text-secondary transition-colors duration-300 p-2 rounded-lg hover:bg-secondary/10"
+              whileHover={{ y: -2, scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              aria-label={label}
             >
-              <FiGithub size={22} />
+              <Icon size={isMobile ? 20 : 24} />
             </motion.a>
-            <motion.a
-              href="https://www.linkedin.com/in/paresh-patil-6bb7231a3/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-textSecondary hover:text-secondary hover:-translate-y-1 transition-all duration-300"
-              whileHover={{ scale: 1.2 }}
-            >
-              <FiLinkedin size={22} />
-            </motion.a>
-            <motion.a
-              href="https://x.com/paresh_balu"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-textSecondary hover:text-secondary hover:-translate-y-1 transition-all duration-300"
-              whileHover={{ scale: 1.2 }}
-            >
-              <FiTwitter size={22} />
-            </motion.a>
-            <div className="h-24 w-px bg-textSecondary/20"></div>
-          </div>
+          ))}
         </motion.div>
 
-        <motion.div
-          variants={itemVariants}
-          className="fixed right-10 bottom-0 hidden lg:block"
-        >
-          <div className="flex flex-col items-center gap-6">
-            <motion.a
-              href="mailto:09patilparesh@gmail.com"
-              className="text-textSecondary hover:text-secondary font-mono tracking-widest hover:-translate-y-1 transition-all duration-300"
-              style={{ writingMode: 'vertical-rl' }}
-              whileHover={{
-                textShadow: "0 0 8px rgba(56, 189, 248, 0.7)"
-              }}
-            >
-              09patilparesh@gmail.com
-            </motion.a>
-            <div className="h-24 w-px bg-textSecondary/20"></div>
-          </div>
-        </motion.div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2 }}
-        >
-          <span className="text-textSecondary text-sm font-mono">Scroll Down</span>
+        {/* Scroll indicator - hidden on mobile */}
+        {!isMobile && (
           <motion.div
-            animate={{ 
-              y: [0, 10, 0],
-              opacity: [0.5, 1, 0.5]
-            }}
-            transition={{ 
-              duration: 1.5, 
-              repeat: Infinity,
-              repeatType: "loop" 
-            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 3, duration: 1 }}
+            className="absolute bottom-8 left-1/2 transform -translate-x-1/2 hidden sm:block"
           >
-            <FiArrowDown className="text-secondary" size={20} />
+            <motion.div
+              animate={{ y: [0, 10, 0] }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                repeatType: "reverse"
+              }}
+              className="text-textSecondary"
+            >
+              <FiArrowDown size={24} />
+            </motion.div>
           </motion.div>
-        </motion.div>
+        )}
       </motion.div>
     </section>
   );

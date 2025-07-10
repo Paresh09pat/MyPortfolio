@@ -12,37 +12,128 @@
 @layer base {
   body {
     @apply bg-primary text-textPrimary;
+    /* Improve mobile scrolling performance */
+    -webkit-overflow-scrolling: touch;
+    /* Prevent horizontal scroll on mobile */
+    overflow-x: hidden;
+  }
+
+  /* Mobile-specific optimizations */
+  @media (max-width: 768px) {
+    body {
+      /* Reduce motion on mobile for better performance */
+      transform: translateZ(0);
+      /* Optimize font rendering on mobile */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Disable complex animations on mobile if user prefers reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
   }
 }
 
 @layer components {
   .nav-link {
-    @apply px-4 py-2 text-sm font-mono text-textSecondary hover:text-secondary transition-colors duration-300;
+    @apply px-3 sm:px-4 py-2 text-sm font-mono text-textSecondary hover:text-secondary transition-colors duration-300;
   }
   
   .section-heading {
-    @apply text-3xl font-bold text-textSecondary mb-8 flex items-center;
+    @apply text-2xl sm:text-3xl font-bold text-textSecondary mb-6 sm:mb-8 flex items-center;
   }
   
   .section-heading::after {
     content: "";
-    @apply ml-4 h-px bg-textPrimary flex-grow;
+    @apply ml-3 sm:ml-4 h-px bg-textPrimary flex-grow;
   }
   
   .btn-primary {
-    @apply px-6 py-3 border border-secondary text-secondary rounded hover:bg-secondary/10 transition-colors duration-300 font-mono;
+    @apply px-4 sm:px-6 py-2 sm:py-3 border border-secondary text-secondary rounded hover:bg-secondary/10 transition-colors duration-300 font-mono text-sm sm:text-base;
+  }
+
+  /* Mobile-optimized touch targets */
+  @media (max-width: 768px) {
+    .btn-primary {
+      @apply min-h-[44px] touch-manipulation; /* iOS recommended touch target size */
+    }
+    
+    .nav-link {
+      @apply min-h-[44px] touch-manipulation;
+    }
   }
 }
 
+/* Optimized animations with mobile considerations */
 .fade-up {
   animation: fadeUp 0.5s ease-out forwards;
   opacity: 0;
   transform: translateY(20px);
 }
 
+/* Reduced motion on mobile */
+@media (max-width: 768px) {
+  .fade-up {
+    animation: fadeUpMobile 0.3s ease-out forwards;
+    transform: translateY(10px);
+  }
+}
+
 @keyframes fadeUp {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes fadeUpMobile {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Performance optimizations */
+* {
+  box-sizing: border-box;
+}
+
+/* Improve mobile scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (max-width: 768px) {
+  html {
+    scroll-behavior: auto; /* Disable smooth scroll on mobile for better performance */
+  }
+}
+
+/* GPU acceleration for better mobile performance */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Mobile-specific utilities */
+@media (max-width: 768px) {
+  .mobile-center {
+    text-align: center;
+  }
+  
+  .mobile-stack {
+    flex-direction: column;
+  }
+  
+  .mobile-full-width {
+    width: 100%;
   }
 }

@@ -51,14 +51,15 @@ const Projects = () => {
     },
   ];
 
-  // Letter animation for the heading
+  // Simplified letter animation for better mobile performance
   const letterVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 10 },
     visible: (i) => ({ 
       opacity: 1,
       y: 0,
       transition: {
-        delay: i * 0.05
+        delay: i * 0.03, // Reduced delay for faster animation
+        duration: 0.3 // Shorter duration
       }
     })
   };
@@ -72,67 +73,58 @@ const Projects = () => {
         variants={letterVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
-        className={char === " " ? "inline-block mr-2" : "inline-block"}
+        className={char === " " ? "inline-block mr-1 sm:mr-2" : "inline-block"}
       >
         {char}
       </motion.span>
     ));
   };
 
-  // Project item animation
+  // Simplified project item animation for better mobile performance
   const projectVariants = {
-    hidden: { opacity: 0, y: 50 },
+    hidden: { opacity: 0, y: 30 },
     visible: (i) => ({
       opacity: 1,
       y: 0,
       transition: {
         delay: i * 0.1,
-        type: "spring",
-        stiffness: 100,
-        damping: 15
+        duration: 0.5,
+        ease: "easeOut"
       }
-    }),
-    hover: {
-      y: -10,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 15
-      }
-    }
+    })
   };
 
   return (
-    <section id="projects" className="py-20 bg-primary relative overflow-hidden">
-      {/* Background Animation */}
+    <section id="projects" className="py-12 sm:py-16 lg:py-20 bg-primary relative overflow-hidden">
+      {/* Simplified background animation for mobile performance */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div 
-          className="absolute inset-0 opacity-10"
+          className="absolute inset-0 opacity-5 sm:opacity-10"
           animate={{ 
             backgroundPosition: ['0% 0%', '100% 100%'] 
           }}
           transition={{ 
-            duration: 20,
+            duration: 30, // Slower animation for better performance
             repeat: Infinity,
             repeatType: "mirror"
           }}
           style={{
             backgroundImage: 'radial-gradient(circle at 30% 30%, #38BDF8 0%, transparent 30%), radial-gradient(circle at 70% 70%, #F472B6 0%, transparent 30%)',
             backgroundSize: '100% 100%',
-            filter: 'blur(100px)'
+            filter: 'blur(60px)' // Reduced blur for better performance
           }}
         />
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-4 relative z-10">
         <motion.div
           ref={projectsRef}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="max-w-6xl mx-auto"
+          className="max-w-7xl mx-auto"
         >
-          <h2 className="section-heading mb-12">
+          <h2 className="section-heading mb-8 sm:mb-12">
             <motion.span 
               className="text-secondary font-mono mr-2"
               initial={{ opacity: 0, x: -20 }}
@@ -140,12 +132,13 @@ const Projects = () => {
               transition={{ duration: 0.5 }}
             >
             </motion.span> 
-            <span className="inline-block">
+            <span className="inline-block text-2xl sm:text-3xl">
               {splitText("Some Things I've Built")}
             </span>
           </h2>
 
-          <div className="grid gap-20">
+          {/* Improved mobile-first grid layout */}
+          <div className="space-y-12 sm:space-y-16 lg:space-y-20">
             {projects.map((project, index) => (
               <motion.div
                 key={project.title}
@@ -153,124 +146,107 @@ const Projects = () => {
                 variants={projectVariants}
                 initial="hidden"
                 animate={isInView ? "visible" : "hidden"}
-                whileHover="hover"
                 onHoverStart={() => setHoveredProject(project.title)}
                 onHoverEnd={() => setHoveredProject(null)}
-                className={`relative grid md:grid-cols-2 gap-8 items-center ${
-                  index % 2 === 0 ? 'md:text-left' : 'md:text-right md:flex-row-reverse'
-                }`}
+                className="relative"
               >
-                {/* Project Image with simplified hover effect */}
-                <div className="relative group overflow-hidden">
-                  <motion.div 
-                    className="absolute inset-0 bg-secondary/20 rounded-lg"
-                    initial={{ opacity: 0 }}
-                    whileHover={{ opacity: 1 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                  <div className="relative z-10 w-full aspect-video rounded-lg overflow-hidden bg-tertiary border border-secondary/30 shadow-lg">
-                    <img 
-                      src={project.image} 
-                      alt={project.title}
-                      className="w-full h-full object-cover"
-                    />
-                    <motion.div 
-                      className="absolute inset-0 bg-tertiary/80 flex items-center justify-center"
-                      initial={{ opacity: 0.8 }}
-                      whileHover={{ opacity: 0.3 }}
-                      transition={{ duration: 0.3 }}
+                {/* Mobile-first layout - single column by default */}
+                <div className="grid gap-6 lg:gap-8 lg:grid-cols-2 lg:items-center">
+                  
+                  {/* Project Image - always first on mobile */}
+                  <div className={`relative group overflow-hidden order-1 ${
+                    index % 2 === 1 ? 'lg:order-2' : 'lg:order-1'
+                  }`}>
+                    <div className="relative z-10 w-full aspect-video rounded-lg overflow-hidden bg-tertiary border border-secondary/30 shadow-lg">
+                      <img 
+                        src={project.image} 
+                        alt={project.title}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy" // Added lazy loading for better performance
+                      />
+                      <motion.div 
+                        className="absolute inset-0 bg-tertiary/60 flex items-center justify-center lg:bg-tertiary/80"
+                        initial={{ opacity: 0.6 }}
+                        whileHover={{ opacity: 0.2 }}
+                        transition={{ duration: 0.3 }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Project Info - always second on mobile, responsive text alignment */}
+                  <div className={`order-2 ${
+                    index % 2 === 1 ? 'lg:order-1 lg:text-right' : 'lg:order-2 lg:text-left'
+                  }`}>
+                    <motion.p 
+                      className="font-mono text-secondary mb-2 text-sm sm:text-base"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+                      transition={{ delay: index * 0.1 }}
                     >
-                      {/* <span className="text-secondary font-mono">
-                        Project Screenshot
-                      </span> */}
+                      Featured Project
+                    </motion.p>
+                    <motion.h3 
+                      className="text-xl sm:text-2xl font-bold text-textPrimary mb-3 sm:mb-4"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+                      transition={{ delay: index * 0.1 + 0.1 }}
+                    >
+                      {project.title}
+                    </motion.h3>
+                    
+                    <motion.div 
+                      className="bg-tertiary/80 p-4 sm:p-6 rounded-lg shadow-md mb-4 border border-tertiary hover:border-secondary/30 transition-colors duration-300"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+                      transition={{ delay: index * 0.1 + 0.2 }}
+                    >
+                      <p className="text-textPrimary text-sm sm:text-base leading-relaxed">{project.description}</p>
+                    </motion.div>
+
+                    {/* Responsive tech stack */}
+                    <motion.ul 
+                      className={`flex flex-wrap gap-2 sm:gap-3 mb-4 ${
+                        index % 2 === 1 ? 'lg:justify-end' : ''
+                      }`}
+                      initial={{ opacity: 0 }}
+                      animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+                      transition={{ delay: index * 0.1 + 0.3 }}
+                    >
+                      {project.tech.map((tech, techIndex) => (
+                        <motion.li 
+                          key={tech} 
+                          className="font-mono text-xs sm:text-sm text-textSecondary bg-tertiary/50 px-2 sm:px-3 py-1 rounded hover:bg-secondary/10 hover:text-textPrimary transition-colors duration-300"
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+                          transition={{ delay: index * 0.05 + techIndex * 0.03 + 0.3 }}
+                        >
+                          {tech}
+                        </motion.li>
+                      ))}
+                    </motion.ul>
+
+                    {/* Project links with better touch targets for mobile */}
+                    <motion.div 
+                      className={`flex gap-4 sm:gap-6 ${
+                        index % 2 === 1 ? 'lg:justify-end' : ''
+                      }`}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+                      transition={{ delay: index * 0.1 + 0.4 }}
+                    >
+                      <motion.a
+                        href={project.live}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-textSecondary hover:text-secondary transition-colors duration-300 p-3 hover:bg-secondary/10 rounded-lg" // Better touch target
+                        whileHover={{ y: -2 }}
+                        whileTap={{ scale: 0.95 }} // Added tap animation for mobile
+                        aria-label={`View ${project.title} live site`}
+                      >
+                        <FiExternalLink size={20} />
+                      </motion.a>
                     </motion.div>
                   </div>
-                </div>
-
-                {/* Project Info with simplified animations */}
-                <div className={`${index % 2 === 1 ? 'md:order-first' : ''}`}>
-                  <motion.p 
-                    className="font-mono text-secondary mb-2"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    Featured Project
-                  </motion.p>
-                  <motion.h3 
-                    className="text-2xl font-bold text-textPrimary mb-4"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-                    transition={{ delay: index * 0.1 + 0.1 }}
-                  >
-                    {project.title}
-                  </motion.h3>
-                  
-                  <motion.div 
-                    className="bg-tertiary/80 p-6 rounded-lg shadow-md mb-4 border border-tertiary"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-                    transition={{ delay: index * 0.1 + 0.2 }}
-                    whileHover={{ 
-                      boxShadow: "0 4px 20px rgba(56, 189, 248, 0.2)",
-                      borderColor: "rgba(56, 189, 248, 0.3)"
-                    }}
-                  >
-                    <p className="text-textPrimary">{project.description}</p>
-                  </motion.div>
-
-                  <motion.ul 
-                    className={`flex flex-wrap gap-3 mb-4 ${
-                      index % 2 === 1 ? 'md:justify-end' : ''
-                    }`}
-                    initial={{ opacity: 0 }}
-                    animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-                    transition={{ delay: index * 0.1 + 0.3 }}
-                  >
-                    {project.tech.map((tech, techIndex) => (
-                      <motion.li 
-                        key={tech} 
-                        className="font-mono text-sm text-textSecondary bg-tertiary/50 px-3 py-1 rounded"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-                        transition={{ delay: index * 0.05 + techIndex * 0.05 + 0.3 }}
-                        whileHover={{
-                          backgroundColor: "rgba(56, 189, 248, 0.1)",
-                          color: "#E2E8F0"
-                        }}
-                      >
-                        {tech}
-                      </motion.li>
-                    ))}
-                  </motion.ul>
-
-                  <motion.div 
-                    className={`flex gap-6 ${
-                      index % 2 === 1 ? 'md:justify-end' : ''
-                    }`}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-                    transition={{ delay: index * 0.1 + 0.4 }}
-                  >
-                    {/* <motion.a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-textSecondary hover:text-secondary transition-colors duration-300 p-2"
-                      whileHover={{ y: -2 }}
-                    >
-                      <FiGithub size={20} />
-                    </motion.a> */}
-                    <motion.a
-                      href={project.live}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-textSecondary hover:text-secondary transition-colors duration-300 p-2"
-                      whileHover={{ y: -2 }}
-                    >
-                      <FiExternalLink size={20} />
-                    </motion.a>
-                  </motion.div>
                 </div>
               </motion.div>
             ))}

@@ -24,27 +24,33 @@ const Home = () => {
     { name: "Node.js", color: "#339933", icon: "N" },
   ];
 
-  // For parallax effect
+  // Optimized parallax effect - only use if not on mobile for better performance
   const { scrollY } = useScroll();
-  const y1 = useTransform(scrollY, [0, 1000], [0, -150]);
-  const y2 = useTransform(scrollY, [0, 1000], [0, -100]);
-  const opacity = useTransform(scrollY, [0, 100, 400], [1, 0.8, 0]);
+  const y1 = useTransform(scrollY, [0, 1000], [0, -100]); // Reduced parallax intensity
+  const y2 = useTransform(scrollY, [0, 1000], [0, -50]);  // Reduced parallax intensity
+  const opacity = useTransform(scrollY, [0, 100, 400], [1, 0.9, 0.7]); // Less aggressive opacity change
 
-  // Track mouse position for custom cursor
+  // Track mouse position for custom cursor (desktop only)
   useEffect(() => {
     const handleMouseMove = (e) => {
       setCursorPosition({ x: e.clientX, y: e.clientY });
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    // Only add mouse tracking on desktop
+    const isDesktop = window.innerWidth >= 768;
+    if (isDesktop) {
+      window.addEventListener("mousemove", handleMouseMove);
+    }
 
     // Simulate loading
     const timer = setTimeout(() => {
       setIsLoaded(true);
-    }, 500);
+    }, 300); // Reduced loading time
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
+      if (isDesktop) {
+        window.removeEventListener("mousemove", handleMouseMove);
+      }
       clearTimeout(timer);
     };
   }, []);
@@ -67,6 +73,20 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Check if device is mobile for performance optimizations
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   return (
     <>
       {/* Loading animation */}
@@ -74,25 +94,27 @@ const Home = () => {
         {!isLoaded && <Loader text="Welcome" />}
       </AnimatePresence>
 
-      {/* Custom cursor effect */}
-      <motion.div
-        className="fixed w-8 h-8 rounded-full bg-secondary/20 backdrop-blur-sm pointer-events-none z-50 border border-secondary/50 hidden md:block"
-        style={{
-          x: cursorPosition.x - 16,
-          y: cursorPosition.y - 16,
-        }}
-        animate={{
-          scale: [1, 1.1, 1],
-          opacity: [0.7, 0.9, 0.7],
-        }}
-        transition={{
-          duration: 1.5,
-          repeat: Infinity,
-          repeatType: "reverse",
-        }}
-      />
+      {/* Custom cursor effect - desktop only */}
+      {!isMobile && (
+        <motion.div
+          className="fixed w-6 h-6 rounded-full bg-secondary/20 backdrop-blur-sm pointer-events-none z-50 border border-secondary/50 hidden md:block"
+          style={{
+            x: cursorPosition.x - 12,
+            y: cursorPosition.y - 12,
+          }}
+          animate={{
+            scale: [1, 1.1, 1],
+            opacity: [0.6, 0.8, 0.6],
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            repeatType: "reverse",
+          }}
+        />
+      )}
 
-      {/* Main content with parallax effect */}
+      {/* Main content with optimized parallax */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -100,20 +122,20 @@ const Home = () => {
         transition={{ duration: 0.5 }}
         className="relative min-h-screen overflow-hidden"
       >
-        {/* Animated background shapes */}
-        {Array(6)
+        {/* Simplified animated background shapes - fewer shapes for better performance */}
+        {!isMobile && Array(3) // Reduced from 6 to 3 shapes
           .fill()
           .map((_, index) => {
-            const size = Math.random() * 300 + 100;
+            const size = Math.random() * 200 + 100; // Smaller sizes
             const xPos = Math.random() * 100;
             const yPos = Math.random() * 100;
-            const duration = Math.random() * 20 + 10;
+            const duration = Math.random() * 30 + 20; // Slower animations
             const delay = Math.random() * 5;
 
             return (
               <motion.div
                 key={index}
-                className="absolute rounded-full bg-gradient-to-r from-secondary/5 to-accent/5 blur-3xl"
+                className="absolute rounded-full bg-gradient-to-r from-secondary/3 to-accent/3 blur-2xl" // Reduced opacity and blur
                 style={{
                   width: size,
                   height: size,
@@ -121,10 +143,9 @@ const Home = () => {
                   top: `${yPos}%`,
                 }}
                 animate={{
-                  x: [0, 30, -20, 10, 0],
-                  y: [0, -40, 20, -10, 0],
-                  rotate: [0, 90, 180, 270, 360],
-                  opacity: [0.3, 0.4, 0.2, 0.5, 0.3],
+                  x: [0, 20, -10, 5, 0], // Reduced movement range
+                  y: [0, -20, 10, -5, 0], // Reduced movement range
+                  opacity: [0.2, 0.3, 0.1, 0.4, 0.2], // Lower opacity values
                 }}
                 transition={{
                   duration: duration,
@@ -136,14 +157,14 @@ const Home = () => {
             );
           })}
 
-        {/* Hero section with motion parallax */}
-        <motion.div style={{ opacity, y: y1 }}>
+        {/* Hero section with conditional parallax */}
+        <motion.div style={isMobile ? {} : { opacity, y: y1 }}>
           <Hero />
         </motion.div>
 
-        {/* Animated skills ticker */}
-        <div className="relative py-10 bg-tertiary/50 backdrop-blur-sm overflow-hidden">
-          <div className="absolute inset-0 bg-tertiary/20" />
+        {/* Simplified skills ticker */}
+        <div className="relative py-8 sm:py-10 bg-tertiary/30 backdrop-blur-sm overflow-hidden">
+          <div className="absolute inset-0 bg-tertiary/10" />
           <motion.div
             className="whitespace-nowrap flex"
             animate={{
@@ -153,12 +174,12 @@ const Home = () => {
               x: {
                 repeat: Infinity,
                 repeatType: "loop",
-                duration: 15,
+                duration: isMobile ? 20 : 15, // Slower on mobile
                 ease: "linear",
               },
             }}
           >
-            {Array(10)
+            {Array(isMobile ? 5 : 8) // Fewer repetitions on mobile
               .fill([
                 "React",
                 "MongoDB",
@@ -178,130 +199,113 @@ const Home = () => {
               .map((skill, i) => (
                 <span
                   key={i}
-                  className="text-4xl font-bold px-4 inline-block text-tertiary"
+                  className="text-2xl sm:text-3xl lg:text-4xl font-bold px-3 sm:px-4 inline-block text-tertiary"
                 >
                   <span className="bg-clip-text text-transparent bg-gradient-to-r from-secondary to-accent">
                     {skill}
                   </span>
-                  <span className="text-secondary mx-4">•</span>
+                  <span className="text-secondary mx-2 sm:mx-4">•</span>
                 </span>
               ))}
           </motion.div>
         </div>
 
-        {/* Tech stack section that appears after scrolling */}
+        {/* Tech stack section with conditional parallax */}
         <motion.section
           ref={techStackRef}
-          className="py-32 px-4 relative z-10"
-          style={{ y: y2 }}
+          className="py-16 sm:py-24 lg:py-32 px-4 relative z-10"
+          style={isMobile ? {} : { y: y2 }}
         >
           <div className="container mx-auto">
             <motion.h2
-              className="text-4xl md:text-5xl font-bold text-textPrimary text-center mb-4"
-              initial={{ y: 50, opacity: 0 }}
-              animate={isInView ? { y: 0, opacity: 1 } : { y: 50, opacity: 0 }}
-              transition={{ type: "spring", damping: 12 }}
+              className="text-3xl sm:text-4xl lg:text-5xl font-bold text-textPrimary text-center mb-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.6 }}
             >
-              My MERN Stack
+              I craft with{" "}
+              <motion.span
+                key={currentKeyword}
+                initial={{ opacity: 0, rotateX: -90 }}
+                animate={{ opacity: 1, rotateX: 0 }}
+                exit={{ opacity: 0, rotateX: 90 }}
+                transition={{ duration: 0.5 }}
+                className="text-secondary inline-block"
+              >
+                {keywords[currentKeyword]}
+              </motion.span>{" "}
+              technologies
             </motion.h2>
 
             <motion.p
-              className="text-center text-xl text-textSecondary mb-16 max-w-2xl mx-auto"
-              initial={{ y: 50, opacity: 0 }}
-              animate={isInView ? { y: 0, opacity: 1 } : { y: 50, opacity: 0 }}
-              transition={{ type: "spring", damping: 12, delay: 0.1 }}
+              className="text-lg sm:text-xl text-textSecondary text-center mb-12 sm:mb-16 max-w-3xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
             >
-              Creating{" "}
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={currentKeyword}
-                  className="text-secondary font-bold inline-block"
-                  initial={{ y: 20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -20, opacity: 0 }}
-                  transition={{ duration: 0.5 }}
-                >
-                  {keywords[currentKeyword]}
-                </motion.span>
-              </AnimatePresence>{" "}
-              web experiences with modern technologies
+              Leveraging the power of modern web technologies to build scalable,
+              user-centric applications that deliver exceptional experiences.
             </motion.p>
 
-            {/* Tech cards with simpler hover effects */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-10 max-w-5xl mx-auto">
+            {/* Simplified MERN stack showcase */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 max-w-4xl mx-auto">
               {techStack.map((tech, index) => (
                 <motion.div
                   key={tech.name}
-                  className="relative group"
-                  initial={{ y: 50, opacity: 0 }}
+                  className="group relative bg-tertiary/50 backdrop-blur-sm rounded-xl p-6 sm:p-8 border border-secondary/20 hover:border-secondary/40 transition-all duration-300"
+                  initial={{ opacity: 0, scale: 0.8 }}
                   animate={
-                    isInView ? { y: 0, opacity: 1 } : { y: 50, opacity: 0 }
+                    isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }
                   }
-                  transition={{
-                    type: "spring",
-                    damping: 12,
-                    delay: index * 0.1 + 0.2,
-                  }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                   whileHover={{ scale: 1.05, y: -5 }}
-                  whileTap={{ scale: 0.98 }}
                 >
-                  <div className="bg-tertiary rounded-xl overflow-hidden p-6 md:p-8 h-40 md:h-48 flex flex-col justify-center items-center relative z-10 border border-secondary/10">
-                    <div className="w-full h-full absolute inset-0 flex flex-col justify-center items-center">
-                      <span
-                        className="text-5xl md:text-6xl font-bold mb-4 drop-shadow-lg"
-                        style={{ color: tech.color }}
-                      >
-                        {tech.icon}
-                      </span>
-                      <h3 className="text-textPrimary text-lg md:text-xl font-mono">
-                        {tech.name}
-                      </h3>
-                    </div>
-
-                    {/* Simpler background effect on hover */}
-                    <motion.div className="absolute inset-0 bg-gradient-to-tr from-secondary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-                    {/* Simplified border effect */}
-                    <motion.div
-                      className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      style={{
-                        boxShadow: "0 0 0 1px rgba(56, 189, 248, 0.3)",
-                      }}
-                    />
+                  {/* Tech icon */}
+                  <div
+                    className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 rounded-lg flex items-center justify-center font-bold text-xl sm:text-2xl text-primary shadow-lg"
+                    style={{ backgroundColor: tech.color }}
+                  >
+                    {tech.icon}
                   </div>
+
+                  {/* Tech name */}
+                  <h3 className="text-center font-semibold text-textPrimary mb-2 text-sm sm:text-base">
+                    {tech.name}
+                  </h3>
+
+                  {/* Simplified hover glow effect */}
+                  <motion.div
+                    className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-20 transition-opacity duration-300"
+                    style={{
+                      background: `radial-gradient(circle at center, ${tech.color}, transparent)`,
+                    }}
+                  />
                 </motion.div>
               ))}
             </div>
-          </div>
 
-          {/* CTA button with simpler hover effect */}
-          <div className="text-center mt-16">
-            <Link to="/experience">
-              <motion.a
-                className="inline-block px-8 py-3 bg-tertiary border border-secondary text-secondary rounded-lg font-mono overflow-hidden relative group"
-                whileHover={{
-                  scale: 1.05,
-                  backgroundColor: "rgba(56, 189, 248, 0.1)",
-                }}
-                whileTap={{ scale: 0.95 }}
+            {/* CTA section */}
+            <motion.div
+              className="text-center mt-12 sm:mt-16"
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+            >
+              <Link
+                to="/projects"
+                className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-secondary/10 border border-secondary text-secondary rounded-lg hover:bg-secondary/20 transition-all duration-300 font-medium text-sm sm:text-base"
               >
-                <span className="relative z-10 group-hover:text-textPrimary transition-colors duration-300">
-                  Explore My Work
-                </span>
-              </motion.a>
-            </Link>
+                Explore My Work
+                <motion.span
+                  animate={{ x: [0, 5, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                >
+                  →
+                </motion.span>
+              </Link>
+            </motion.div>
           </div>
         </motion.section>
-
-        {/* Dynamic grid lines in background */}
-        <div className="fixed inset-0 pointer-events-none z-0">
-          <div className="absolute w-full h-px bg-secondary/5 top-1/4" />
-          <div className="absolute w-full h-px bg-secondary/5 top-2/4" />
-          <div className="absolute w-full h-px bg-secondary/5 top-3/4" />
-          <div className="absolute h-full w-px bg-secondary/5 left-1/4" />
-          <div className="absolute h-full w-px bg-secondary/5 left-2/4" />
-          <div className="absolute h-full w-px bg-secondary/5 left-3/4" />
-        </div>
       </motion.div>
     </>
   );
