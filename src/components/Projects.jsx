@@ -24,6 +24,23 @@ const Projects = () => {
       live: 'https://theainet.net/',
       image: '/ainet.png'
     },
+
+    {
+      title: 'Infinity Cans',
+      description: 'This is a website built with HTML, CSS,Javascript, React, Node.js. It is developed for a client who wants to sell digital printed cans online.',
+      tech: ['HTML', 'CSS', 'React', 'Node.js','Javascript'],
+      github: 'https://github.com/Paresh09pat/Inifinity',
+      live: 'https://infinity-cans.netlify.app/',
+      image: '/Infinity.png'
+    },
+    {
+      title: 'Ecommerce Website',
+      description: 'A ecommerce website built with React, Node.js, Express, and MongoDB. It allows users to create, read, update, and delete products.',
+      tech: ['React', 'Node.js', 'Express', 'MongoDB','Javascript'],
+      github: 'https://github.com/Paresh09pat/EcomClothes',
+      live: 'https://clothe-ecom.netlify.app/',
+      image: '/Ecom.png'
+    },
     {
       title: 'React Blog Project',
       description: 'This is a blog project built with React, Node.js, Express, and MongoDB. It allows users to create, read, update, and delete blog posts. ',
@@ -32,22 +49,6 @@ const Projects = () => {
       live: 'https://paresh-blog-project.netlify.app/',
       image: '/blog.png'
     },
-    {
-      title: 'Hotstar Clone',
-      description: 'This is a hotstar clone project built with React, Node.js, Express, and MongoDB. It allows users to create, read, update, and delete blog posts.',
-      tech: ['React', 'Node.js', 'Express', 'MongoDB','Javascript'],
-      github: '#',
-      live: 'https://hotstar-ass.netlify.app/',
-      image: '/hotstar.png'
-    },
-    // {
-    //   title: 'Real-time Collaboration Tool',
-    //   description: 'A collaborative platform for teams to work together in real-time with document editing, video conferencing, and project planning capabilities.',
-    //   tech: ['React', 'WebRTC', 'Socket.io', 'MongoDB', 'Express'],
-    //   github: '#',
-    //   live: '#',
-    //   image: '/project5.jpg'
-    // }
   ];
 
   // Letter animation for the heading
