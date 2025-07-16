@@ -23,7 +23,7 @@ const Experience = () => {
     {
       title: 'Full Stack Developer',
       company: 'Redphantom Tech Novelty, Pune',
-      duration: 'May 2023 - Jan 2025',
+      duration: 'Feb 2023 - Jan 2025',
       points: [
         'Developed and maintained multiple client projects using React and Node.js',
         'Integrated third-party APIs and payment gateways',
@@ -34,7 +34,7 @@ const Experience = () => {
     {
       title: 'Trainee',
       company: 'Prepbytes, Gurugram',
-      duration: 'Jun 2022 - Apr 2023',
+      duration: 'July 2022 - Dec 2022',
       points: [
         'Built and maintained client websites using HTML, CSS, and JavaScript',
         'Assisted in database design and implementation using MongoDB',

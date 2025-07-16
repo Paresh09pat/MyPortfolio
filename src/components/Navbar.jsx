@@ -133,7 +133,7 @@ const Navbar = () => {
                 transition={{ duration: 0.5, delay: navItems.length * 0.1 }}
               >
                 <motion.a
-                  href="/PARESHPATIL.pdf"
+                  href="/Paresh_MERN_3yr.pdf"
                   className="px-4 lg:px-6 py-2 rounded-lg bg-secondary/10 border border-secondary text-secondary transition-all duration-300 hover:bg-secondary/20 text-sm lg:text-base"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -240,7 +240,7 @@ const Navbar = () => {
                     className="pb-6"
                   >
                     <a
-                      href="/PARESHPATIL.pdf"
+                      href="/Paresh_MERN_3yr.pdf"
                       className="block w-full py-3 px-4 text-center rounded-lg bg-secondary/10 border border-secondary text-secondary transition-all duration-300 hover:bg-secondary/20 font-medium"
                       target="_blank"
                       rel="noopener noreferrer"
