@@ -11,7 +11,7 @@ const Projects = () => {
     {
       title: 'Portfolio Project',
       description: 'A full-stack portfolio website built with the MERN stack (MongoDB, Express.js, React, Node.js). It showcases personal projects, skills, experience, and includes a dynamic contact form powered by EmailJS. The site features a responsive design.',
-      tech: ['React','Framer Motion','Tailwind CSS','EmailJS','Javascript'],
+      tech: ['React','Framer Motion','Tailwind CSS','EmailJS','Javascript','CSS'],
       github: '#',
       live: 'https://paresh-port-folio.netlify.app/',
       image: '/portfolio.png'
@@ -19,7 +19,7 @@ const Projects = () => {
     {
       title: 'AINET Website',
       description: 'This is an project for Indian English Teacher Society, I have created this website for them to showcase their work and services. Also them upcoming events and news.',
-      tech: ['React', 'Node.js', 'Express', 'Tailwind CSS', 'Javascript'],
+      tech: ['React', 'Node.js', 'Express', 'Tailwind CSS', 'Javascript','MongoDB'],
       github: '#',
       live: 'https://theainet.net/',
       image: '/ainet.png'
@@ -28,7 +28,7 @@ const Projects = () => {
     {
       title: 'Infinity Cans',
       description: 'This is a website built with HTML, CSS,Javascript, React, Node.js. It is developed for a client who wants to sell digital printed cans online.',
-      tech: ['HTML', 'CSS', 'React', 'Node.js','Javascript'],
+      tech: ['HTML', 'CSS', 'React', 'Node.js','Javascript','Tailwind CSS','MongoDB'],
       github: 'https://github.com/Paresh09pat/Inifinity',
       live: 'https://infinity-cans.netlify.app/',
       image: '/Infinity.png'
@@ -36,7 +36,7 @@ const Projects = () => {
     {
       title: 'Ecommerce Website',
       description: 'A ecommerce website built with React, Node.js, Express, and MongoDB. It allows users to create, read, update, and delete products.',
-      tech: ['React', 'Node.js', 'Express', 'MongoDB','Javascript'],
+      tech: ['React', 'Node.js', 'Express', 'MongoDB','Javascript','HTML','CSS'],
       github: 'https://github.com/Paresh09pat/EcomClothes',
       live: 'https://clothe-ecom.netlify.app/',
       image: '/Ecom.png'
