@@ -24,7 +24,14 @@ const Projects = () => {
       live: 'https://theainet.net/',
       image: '/ainet.png'
     },
-
+    {
+      title: 'Ecommerce Website',
+      description: 'A ecommerce website built with React, Node.js, Express, and MongoDB. It allows users to create, read, update, and delete products.',
+      tech: ['React', 'Node.js', 'Express', 'MongoDB','Javascript','HTML','CSS'],
+      github: 'https://github.com/Paresh09pat/EcomClothes',
+      live: 'https://www.0dhni.in/',
+      image: '/Ecom.png'
+    },
     {
       title: 'Infinity Cans',
       description: 'This is a website built with HTML, CSS,Javascript, React, Node.js. It is developed for a client who wants to sell digital printed cans online.',
@@ -32,14 +39,6 @@ const Projects = () => {
       github: 'https://github.com/Paresh09pat/Inifinity',
       live: 'https://infinity-cans.netlify.app/',
       image: '/Infinity.png'
-    },
-    {
-      title: 'Ecommerce Website',
-      description: 'A ecommerce website built with React, Node.js, Express, and MongoDB. It allows users to create, read, update, and delete products.',
-      tech: ['React', 'Node.js', 'Express', 'MongoDB','Javascript','HTML','CSS'],
-      github: 'https://github.com/Paresh09pat/EcomClothes',
-      live: 'https://clothe-ecom.netlify.app/',
-      image: '/Ecom.png'
     },
     {
       title: 'React Blog Project',
